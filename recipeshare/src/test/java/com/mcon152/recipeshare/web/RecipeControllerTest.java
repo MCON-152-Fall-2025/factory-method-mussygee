@@ -25,6 +25,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.Matchers.endsWith;
 
 /**
  * Enhanced controller tests demonstrating a wide range of Mockito features.
@@ -65,6 +66,43 @@ class RecipeControllerTest {
 
     @Nested
     class CreationTests {
+
+        @Test
+        void addSoupRecipe_returns201_and_LocationHeader() throws Exception {
+            // Build request JSON
+            ObjectNode json = mapper.createObjectNode();
+            json.put("type", "SOUP");
+            json.put("title", "Tomato Basil Soup");
+            json.put("description", "Classic soup");
+            json.put("ingredients", "Tomatoes; Basil; Stock; Salt");
+            json.put("instructions", "Simmer tomatoes and basil. ");
+            json.put("servings", 3);
+            json.put("spiceLevel", 2);
+            String body = mapper.writeValueAsString(json);
+
+            // Service returns a saved Soup with ID 42 (so we can assert Location)
+            SoupRecipe saved = new SoupRecipe();
+            saved.setId(42L);
+            saved.setTitle("Tomato Basil Soup");
+            saved.setDescription("Classic soup");
+            saved.setIngredients("Tomatoes; Basil; Stock; Salt");
+            saved.setInstructions("Simmer tomatoes and basil. ");
+            saved.setServings(3);
+            saved.setSpiceLevel(2);
+
+            when(recipeService.addRecipe(any(Recipe.class))).thenReturn(saved);
+
+            mockMvc.perform(post("/api/recipes")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(body))
+                    .andExpect(status().isCreated())
+                    // assert location header exactly as assignment wants
+                    .andExpect(header().string("Location", endsWith("/api/recipes/42")));
+            // verify(recipeService).addRecipe(recipeCaptor.capture());
+            verify(recipeService).addRecipe(recipeCaptor.capture());
+            assertInstanceOf(SoupRecipe.class, recipeCaptor.getValue());
+            verifyNoMoreInteractions(recipeService);
+        }
 
         @Test
         void testAddRecipe_thenAnswer_andArgumentCaptor_andInOrder_andNoMoreInteractions() throws Exception {

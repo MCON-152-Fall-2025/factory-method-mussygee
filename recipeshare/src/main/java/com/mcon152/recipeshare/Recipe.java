@@ -22,6 +22,7 @@ public class Recipe {
 
     private Integer servings; // New field for number of servings
 
+    private Integer spiceLevel; // used for soupRecipe only (nullable)
     // Map discriminator column as a read-only field so DDL/copy operations include it; make it nullable and
     // give a default so schema updates that INSERT without the column won't violate NOT NULL.
     @Column(name = "recipe_type", insertable = false, updatable = false, nullable = true,
@@ -58,6 +59,9 @@ public class Recipe {
 
     public Integer getServings() { return servings; }
     public void setServings(Integer servings) { this.servings = servings; }
+
+    public Integer getSpiceLevel() { return spiceLevel;}
+    public void setSpiceLevel(Integer spiceLevel) { this.spiceLevel = spiceLevel; }
 
     // Read-only access to discriminator value
     public String getRecipeType() { return recipeType; }

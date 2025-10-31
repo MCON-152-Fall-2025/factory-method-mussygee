@@ -19,6 +19,9 @@ public class RecipeFactory {
             case "DAIRY":
                 out = new DairyRecipe();
                 break;
+            case "SOUP":
+                out = new SoupRecipe();
+                break;
             case "BASIC":
             default:
                 out = new BasicRecipe();
@@ -33,6 +36,11 @@ public class RecipeFactory {
             out.setIngredients(req.getIngredients());
             out.setInstructions(req.getInstructions());
             out.setServings(req.getServings());
+
+            // handle soup-specific field (option step after common ones)
+            if (req != null && out instanceof SoupRecipe) {
+                ((SoupRecipe) out).setSpiceLevel(req.getSpiceLevel());
+            }
         }
 
         return out;
