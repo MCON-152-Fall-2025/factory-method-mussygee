@@ -127,5 +127,15 @@ For questions or feedback, please open an issue on GitHub.
 
 ## Reference Documentation
 
-- [Spring Boot Documentation](https://spring.io/projects/spring-boot)
+ [Spring Boot Documentation](https://spring.io/projects/spring-boot)
 - [Apache Maven Documentation](https://maven.apache.org/guides/index.html)
+
+## How to run the application using Maven: 
+mvn spring-boot:run
+
+## How to access it locally using SSH port forwarding: 
+ssh -L 8082:localhost:8081 -p 5013 student@lab-7b26ae37-b882-4d58-8930-a67d4ab2a674.eastus.cloudapp.azure.com
+
+Then browse to http://localhost:8082
+
+
